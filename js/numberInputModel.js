@@ -1,16 +1,44 @@
-import QuestionModel from 'core/js/models/questionModel';
+import QuestionModel from "core/js/models/questionModel";
+import Adapt from "core/js/adapt";
 
 class NumberInputModel extends QuestionModel {
-  init() {
-    super.init();
+  initialize(...args) {
+    super.initialize(...args);
 
-    this.set(
-      "_genericAnswerIndexOffset",
-      NumberInputModel.genericAnswerIndexOffset
-    );
+    // const userId = "Ben";
+    const userId = Adapt.spoor.scorm.scorm.get("cmi.core.student_id");
+    this.set("_userId", userId);
 
-    this.setupQuestionItemIndexes();
-    this.checkCanSubmit();
+    this.pollForScore();
+  }
+
+  async fetchScore() {
+    // const userId = "Ben";
+    const url = `https://mlgame.learndata.info/game/63cf10e9631a60aab279c391/result?userId=${userId}`;
+
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      if (data && data.score !== undefined && data.score !== null) {
+        console.log("Score", data.score);
+        this.setScore(data.score);
+        this.trigger("scoreUpdated", data.score);
+        this.set("_isEnabled", true);
+        this.markAsComplete();
+      } else {
+        this.showGameLink();
+
+        this.trigger("noScoreAvailable");
+      }
+    } catch (error) {
+      console.error("Error fetching score:", error);
+      this.showGameLink();
+
+      this.trigger("noScoreAvailable");
+    }
+  }
+  setScore(score) {
+    this.set("_score", score);
   }
 
   /**
@@ -76,25 +104,20 @@ class NumberInputModel extends QuestionModel {
     this.set("_items", _.shuffle(this.get("_items")));
   }
 
-  // Use to check if the user is allowed to submit the question
   canSubmit() {
-    // can submit if every item has user input
     return this.get("_items").every(({ userAnswer }) => userAnswer);
   }
   setItemUserAnswer(itemIndex, userAnswer) {
     const item = this.get("_items")[itemIndex];
     if ($.isNumeric(userAnswer)) {
       item.userAnswer = userAnswer;
-      item._isCorrect = true; // Mark individual item as correct
     } else {
       item.userAnswer = "";
       item._isCorrect = false;
     }
     this.checkCanSubmit();
-    console.log("User input:", userAnswer); // Log user input
   }
 
-  // Preserves the state for returning or showing the user's answers
   storeUserAnswer() {
     const items = this.get("_items");
 
@@ -108,7 +131,6 @@ class NumberInputModel extends QuestionModel {
   }
 
   isCorrect() {
-    // Always return true, indicating the answer is correct
     return true;
   }
 
@@ -116,8 +138,6 @@ class NumberInputModel extends QuestionModel {
     return this.get("_isAtLeastOneCorrectSelection");
   }
 
-  // Allows the learner to give answers into any input, ignoring the order.
-  // (this excludes any inputs which have their own specific answers).
   markGenericAnswers() {
     let numberOfCorrectAnswers = 0;
     const correctAnswers = this.get("_answers").slice();
@@ -144,9 +164,6 @@ class NumberInputModel extends QuestionModel {
     });
   }
 
-  // Marks any items which have answers specific to it
-  // (i.e. item has a _answers array)
-  // Simplify markSpecificAnswers method
   markSpecificAnswers() {
     this.get("_items").forEach((item) => {
       item._isCorrect = true;
@@ -168,18 +185,24 @@ class NumberInputModel extends QuestionModel {
     }
     if (this.get("_allowsPunctuation")) {
       userAnswer = userAnswer.replace(/[.,-/#!$£%^&*;:{}=\-_`~()]/g, "");
-      // remove any orphan double spaces and replace with single space (B & Q)->(B  Q)->(B Q)
+
       userAnswer = userAnswer.replace(/(  +)+/g, " ");
     }
-    // removes whitespace from beginning/end (leave any in the middle)
+
     return userAnswer.trim();
   }
+  pollForScore() {
+    const pollInterval = 10000;
+    this.pollingIntervalId = setInterval(() => {
+      this.fetchScore();
+    }, pollInterval);
+  }
+  setScore(score) {
+    this.set("_score", score);
+  }
 
-  // Used to set the score based upon the _questionWeight
-  setScore() {
-    // Always set full score
-    this.set("_score", this.get("_questionWeight"));
-    console.log("Current score:", this.get("_score")); // Log current score
+  markAsComplete() {
+    this.set("_isComplete", true);
   }
 
   resetUserAnswer() {
@@ -189,14 +212,23 @@ class NumberInputModel extends QuestionModel {
     });
   }
 
+  showGameLink() {
+    const gameLink =
+      "https://mlgame.learndata.info/game/63cf10e9631a60aab279c391/";
+    this.set("_gameLink", gameLink);
+  }
+
+  clearPolling() {
+    clearInterval(this.pollingIntervalId);
+  }
+
   /**
    * used by adapt-contrib-spoor to get the user's answers in the format required by the cmi.interactions.n.student_response data field
    * returns the user's answers as a string in the format 'answer1[,]answer2[,]answer3'
    * the use of [,] as an answer delimiter is from the SCORM 2004 specification for the fill-in interaction type
    */
-  
+
   getResponse() {
-    // Directly return the user's input
     return this.get("_items")
       .map(({ userAnswer }) => userAnswer)
       .join("[,]");

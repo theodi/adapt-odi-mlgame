@@ -1,11 +1,51 @@
-import QuestionView from 'core/js/views/questionView';
+import QuestionView from "core/js/views/questionView";
 class NumberInputView extends QuestionView {
+  initialize() {
+    super.initialize();
+    this.listenTo(this.model, "scoreUpdated", this.updateScoreInInputs);
+    this.listenTo(this.model, "noScoreAvailable", this.renderGameLink);
+  }
+
+  updateScoreInInputs(score) {
+    this.model.get("_items").forEach((item, index) => {
+      item.userAnswer = score;
+
+      const $input = this.$(`.js-numberinput-numberbox:eq(${index})`);
+      $input.val(score);
+
+      this.model.setItemUserAnswer(index, score);
+    });
+  }
   events() {
     return {
       "focus .js-numberinput-numberbox": "clearValidationError",
       "change .js-numberinput-numberbox": "onInputChanged",
       "keyup .js-numberinput-numberbox": "onInputChanged",
     };
+  }
+
+  renderGameLink() {
+    const gameLink = this.model.get("_gameLink");
+    if (gameLink) {
+      this.$(".game-link-container").html(
+        `<div> <span>No score found</span> <a href="${gameLink}" target="_blank">Play the Game</a><span> to receive a score</span></div>`
+      );
+    }
+  }
+
+  onQuestionPreRender() {
+    const presetScore = this.model.get("_score");
+    this.model.get("_items").forEach((item) => {
+      item.userAnswer = presetScore;
+    });
+  }
+
+  updateInputFieldsWithPresetScore() {
+    const presetScore = this.model.get("_score");
+    this.model.get("_items").forEach((item, index) => {
+      const $input = this.$(`.js-numberinput-numberbox:eq(${index})`);
+      $input.val(presetScore);
+    });
   }
 
   setupQuestion() {
@@ -27,16 +67,24 @@ class NumberInputView extends QuestionView {
       $itemInput.prop("disabled", !isEnabled);
     });
   }
-
   onQuestionRendered() {
+    super.onQuestionRendered();
+    this.updateInputFieldsWithPresetScore();
     this.setReadyStatus();
+  }
+
+  updateInputFieldsWithPresetScore() {
+    const presetScore = this.model.get("_score");
+    this.model.get("_items").forEach((item, index) => {
+      const $input = this.$(`.js-numberinput-numberbox:eq(${index})`);
+      $input.val(presetScore);
+    });
   }
 
   clearValidationError() {
     this.$(".js-numberinput-numberbox").removeClass("has-error");
   }
 
-  // Blank method for question to fill out when the question cannot be submitted
   onCannotSubmit() {
     this.showValidationError();
   }
@@ -45,8 +93,6 @@ class NumberInputView extends QuestionView {
     this.$(".js-numberinput-numberbox").addClass("has-error");
   }
 
-  // This is important and should give the user feedback on how they answered the question
-  // Normally done through ticks and crosses by adding classes
   showMarking() {
     if (!this.model.get("_canShowMarking")) return;
 
@@ -58,7 +104,6 @@ class NumberInputView extends QuestionView {
     });
   }
 
-  // Used by the question view to reset the look and feel of the component.
   resetQuestion() {
     this.$(".js-numberinput-numberbox")
       .prop("disabled", !this.model.get("_isEnabled"))
@@ -90,22 +135,17 @@ class NumberInputView extends QuestionView {
   onInputChanged(e) {
     const $input = $(e.target);
     const inputVal = $input.val();
+    const index = $input.parents(".js-numberinput-item").index();
 
-    // Check if the input value is a number
     if (inputVal !== "" && !$.isNumeric(inputVal)) {
-      // If not a number, clear the input and optionally show an error
       $input.val("");
       this.showValidationError("Please enter a valid number.");
     } else {
-      // If it's a number, update the model with the user's answer
-      this.model.setItemUserAnswer(
-        $input.parents(".js-numberinput-item").index(),
-        inputVal
-      );
+      this.model.setItemUserAnswer(index, inputVal);
     }
   }
 }
 
-NumberInputView.template = 'numberinput.jsx';
+NumberInputView.template = "numberinput.jsx";
 
 export default NumberInputView;
