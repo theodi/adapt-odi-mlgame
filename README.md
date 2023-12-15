@@ -2,11 +2,9 @@
 
 **Number Input** is a *question component* developed by the Open Data Institute, tailored for the [Adapt framework](https://github.com/adaptlearning/adapt_framework).
 
-![Number Input in action](https://github.com/adaptlearning/documentation/blob/master/04_wiki_assets/plug-ins/images/textInput01.gif)
-
 **Number Input** is designed to allow the user to input a numerical answer in response to a question. It is particularly unique as it only considers the first item's response and treats any numeric input as correct, storing this value as the user's score.
 
-[Visit the **Number Input** wiki](https://github.com/adaptlearning/adapt-contrib-textInput/wiki) for more detailed information about its functionality and key properties.
+[Visit the **Number Input** wiki](https://github.com/adaptlearning/adapt-textInput/wiki) for more detailed information about its functionality and key properties.
 
 ## Installation
 
@@ -20,7 +18,7 @@ Alternatively, add `"number-input": "*"` to the *adapt.json* file and then run `
 
 ## Settings Overview
 
-**Number Input** is configured in *components.json*, with its configuration formatted as JSON in [*example.json*](https://github.com/adaptlearning/adapt-contrib-textInput/blob/master/example.json).
+**Number Input** is configured in *components.json*, with its configuration formatted as JSON in [*example.json*](https://github.com/adaptlearning/adapt-numberInput/blob/master/example.json).
 
 ### Attributes
 
