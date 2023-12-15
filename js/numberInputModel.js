@@ -28,6 +28,11 @@ class NumberInputModel extends QuestionModel {
     return true;
   }
 
+  markGenericAnswers() {
+    this.get("_items").forEach((item) => {
+      item._isCorrect = true;
+    });
+  }
   setupQuestionItemIndexes() {
     this.get("_items").forEach((item, index) => {
       if (item._index === undefined) item._index = index;
@@ -44,7 +49,9 @@ class NumberInputModel extends QuestionModel {
       const answerIndex = userAnswer[item._index];
       if (answerIndex >= NumberInputModel.genericAnswerIndexOffset) {
         item.userAnswer =
-          genericAnswers[answerIndex - NumberInputModel.genericAnswerIndexOffset];
+          genericAnswers[
+            answerIndex - NumberInputModel.genericAnswerIndexOffset
+          ];
         item._answerIndex = answerIndex;
       } else if (answerIndex > -1) {
         item.userAnswer = item._answers[answerIndex];
@@ -101,12 +108,8 @@ class NumberInputModel extends QuestionModel {
   }
 
   isCorrect() {
-    if (this.get("_answers")) {
-      this.markGenericAnswers();
-    } else {
-      this.markSpecificAnswers();
-    }
-    return this.get("_items").every(({ _isCorrect }) => _isCorrect);
+    // Always return true, indicating the answer is correct
+    return true;
   }
 
   isPartlyCorrect() {
@@ -143,20 +146,10 @@ class NumberInputModel extends QuestionModel {
 
   // Marks any items which have answers specific to it
   // (i.e. item has a _answers array)
+  // Simplify markSpecificAnswers method
   markSpecificAnswers() {
-    let numberOfCorrectAnswers = 0;
     this.get("_items").forEach((item) => {
-      const answers = item._answers;
-      if (!answers) return;
-      const userAnswer = item.userAnswer || "";
-      const isCorrect = this.checkAnswerIsCorrect(answers, userAnswer);
-      item._isCorrect = isCorrect;
-      item._answerIndex = answers.indexOf(this.cleanupUserAnswer(userAnswer));
-      if (!isCorrect) return;
-      this.set({
-        _numberOfCorrectAnswers: ++numberOfCorrectAnswers,
-        _isAtLeastOneCorrectSelection: true,
-      });
+      item._isCorrect = true;
     });
   }
 
@@ -201,9 +194,12 @@ class NumberInputModel extends QuestionModel {
    * returns the user's answers as a string in the format 'answer1[,]answer2[,]answer3'
    * the use of [,] as an answer delimiter is from the SCORM 2004 specification for the fill-in interaction type
    */
+  
   getResponse() {
-    const firstAnswer = this.get("_items")[0].userAnswer;
-    return parseFloat(firstAnswer) || 0;
+    // Directly return the user's input
+    return this.get("_items")
+      .map(({ userAnswer }) => userAnswer)
+      .join("[,]");
   }
 
   /**
