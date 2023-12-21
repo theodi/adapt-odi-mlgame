@@ -19,7 +19,6 @@ export default function NumberInput (props) {
   return (
     <div className="component__inner numberinput__inner">
       <templates.header {...props} />
-
       {/* complex unless and if combination to set the correct classes for CSS to use in showing marking and disabled states */}
       <div
         className={classes([
@@ -99,11 +98,12 @@ export default function NumberInput (props) {
                   ></label>
                 </div>
               )}
-
             </div>
           )
-          )}
-          <div className="game-link-container"></div>
+        )}
+        <div className="table-container"></div>
+      <div className="list-container"></div>
+        <div className="game-link-container"></div>
       </div>
       <div className="btn__container" />
     </div>

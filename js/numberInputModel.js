@@ -14,13 +14,18 @@ class NumberInputModel extends QuestionModel {
 
   async fetchScore() {
     // const userId = "Ben";
+    const userId = this.get("_userId");
     const url = `https://mlgame.learndata.info/game/63cf10e9631a60aab279c391/result?userId=${userId}`;
 
     try {
       const response = await fetch(url);
       const data = await response.json();
       if (data && data.score !== undefined && data.score !== null) {
-        console.log("Score", data.score);
+        // console.log("Score", data.score);
+        this.set("_userTree", data.tree);
+        this.trigger("decisionTreeDataFetched", data.tree);
+        this.set("_userTableData", data);
+        this.trigger("tableDataFetched", data);
         this.setScore(data.score);
         this.trigger("scoreUpdated", data.score);
         this.set("_isEnabled", true);

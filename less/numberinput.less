@@ -62,3 +62,166 @@
   text-align: center;
   margin-block: 10px;
 }
+
+.table-container {
+  display: flex;
+  justify-content: center;
+}
+
+.list-container {
+  margin-left: -40px;
+  padding-top: 100px;
+  position: absolute;
+}
+
+.list-container ul {
+  padding: 20px;
+  position: relative;
+  transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+}
+
+.list-container li {
+  float: left;
+  text-align: center;
+  list-style-type: none;
+  position: relative;
+  padding: 20px 5px 0 5px;
+
+  transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+}
+
+/*We will use ::before and ::after to draw the connectors*/
+.list-container li::before,
+.list-container li::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 50%;
+  border-top: 2px solid black;
+  width: 50%;
+  height: 20px;
+}
+
+.list-container li::after {
+  right: auto;
+  left: 50%;
+  border-left: 2px solid black;
+}
+
+/*We need to remove left-right connectors from elements without 
+any siblings*/
+.list-container li:only-child::after,
+.list-container li:only-child::before {
+  display: none;
+}
+
+/*Remove space from the top of single children*/
+.list-container li:only-child {
+  padding-top: 0;
+}
+
+.tree-item-root {
+  z-index: 1000;
+  border-radius: 4px;
+  padding: 5px;
+  margin: 5px;
+  text-transform: capitalize;
+  color: white;
+  background-color: orange;
+  /* Optional: to ensure text is readable over connectors */
+}
+
+.tree-item-factor {
+  border: 3px solid #085FD4;
+  border-radius: 4px;
+  z-index: 1000;
+  // margin: 5px;
+  text-transform: capitalize;
+  color: white;
+  background-color: #085FD4;
+  /* Optional: to ensure text is readable over connectors */
+}
+
+.tree-item-prediction {
+  border: 3px solid green;
+  border-radius: 4px;
+  text-transform: capitalize;
+  color: white;
+  font-weight: bold;
+  background-color: green;
+  /* Optional: to ensure text is readable over connectors */
+}
+
+/*Remove left connector from first child and 
+right connector from last child*/
+.list-container li:first-child::before,
+.list-container li:last-child::after {
+  border: 0 none;
+}
+
+/*Adding back the vertical connector to the last nodes*/
+.list-container li:last-child::before {
+  border-right: 2px solid black;
+  border-radius: 0 5px 0 0;
+  -webkit-border-radius: 0 5px 0 0;
+  -moz-border-radius: 0 5px 0 0;
+}
+
+.list-container li:first-child::after {
+  border-radius: 5px 0 0 0;
+  -webkit-border-radius: 5px 0 0 0;
+  -moz-border-radius: 5px 0 0 0;
+}
+
+/*Time to add downward connectors from parents*/
+.list-container ul ul::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  border-left: 2px solid black;
+  width: 0;
+  height: 20px;
+}
+
+.list-container li a {
+  border: 2px solid black;
+  padding: 5px 10px;
+  text-decoration: none;
+  color: #666;
+  font-family: arial, verdana, tahoma;
+  font-size: 11px;
+  display: inline-block;
+
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+
+  transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+}
+
+/*Time for some hover effects*/
+/*We will apply the hover effect the the lineage of the element also*/
+.list-container li a:hover,
+.list-container li a:hover+ul li a {
+  background: #c8e4f8;
+  color: #000;
+  border: 2px solid black;
+}
+
+/*Connector styles on hover*/
+.list-container li a:hover+ul li::after,
+.list-container li a:hover+ul li::before,
+.list-container li a:hover+ul::before,
+.list-container li a:hover+ul ul::before {
+  border-color: #94a0b4;
+}
+
+/*Thats all. I hope you enjoyed it.
+Thanks :)*/
