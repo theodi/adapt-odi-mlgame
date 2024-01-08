@@ -4,8 +4,9 @@ import Adapt from "core/js/adapt";
 class NumberInputModel extends QuestionModel {
   initialize(...args) {
     super.initialize(...args);
-
-    // const userId = "Ben";
+    
+    this.get("_buttons")._submit.buttonText = "Awaiting Score";
+    
     const userId = Adapt.spoor.scorm.scorm.get("cmi.core.student_id");
     this.set("_userId", userId);
 
@@ -13,8 +14,7 @@ class NumberInputModel extends QuestionModel {
   }
 
   async fetchScore() {
-    // const userId = "Ben";
-    const userId = this.get("_userId");
+    // const userId = "ForJack"
     const url = `https://mlgame.learndata.info/game/63cf10e9631a60aab279c391/result?userId=${userId}`;
 
     try {
@@ -28,11 +28,10 @@ class NumberInputModel extends QuestionModel {
         this.trigger("tableDataFetched", data);
         this.setScore(data.score);
         this.trigger("scoreUpdated", data.score);
-        this.set("_isEnabled", true);
         this.markAsComplete();
+        console.log("submitScore");
       } else {
         this.showGameLink();
-
         this.trigger("noScoreAvailable");
       }
     } catch (error) {

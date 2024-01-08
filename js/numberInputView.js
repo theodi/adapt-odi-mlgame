@@ -177,6 +177,10 @@ function createBranchesHtml(predictions, boundaryValue) {
   }
 
   updateScoreInInputs(score) {
+         this.model.get("_buttons")._submit.buttonText = "Score Submitted";
+         this.model.setQuestionAsSubmitted()
+         this.model.updateButtons();
+
     this.model.get("_items").forEach((item, index) => {
       item.userAnswer = score;
 

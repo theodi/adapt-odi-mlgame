@@ -188,7 +188,7 @@
         "title": {
           "type": "string",
           "required": false,
-          "default": "",
+          "default": "false",
           "title": "Feedback Title",
           "inputType": "Text",
           "validators": [],
@@ -273,7 +273,7 @@
               "type": "string",
               "required": false,
               "default": "",
-              "title": "",
+              "title": "Awaiting Score",
               "inputType": "QuestionButton",
               "validators": [],
               "help": "Button label text for the submit button",
