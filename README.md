@@ -1,4 +1,4 @@
-# README for Adapt ODI Machine Learning Game Component
+# Adapt ODI Machine Learning Game
 
 ## Introduction
 The Adapt ODI Machine Learning Game Component is a specialized module developed by the Open Data Institute, designed specifically for the Adapt framework. This component enhances the learning experience by integrating an interactive game focused on machine learning concepts.
