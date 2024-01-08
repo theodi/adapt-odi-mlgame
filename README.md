@@ -1,44 +1,40 @@
-# number-input
+# README for Adapt ODI Machine Learning Game Component
 
-**Number Input** is a *question component* developed by the Open Data Institute, tailored for the [Adapt framework](https://github.com/adaptlearning/adapt_framework).
+## Introduction
+The Adapt ODI Machine Learning Game Component is a specialized module developed by the Open Data Institute, designed specifically for the Adapt framework. This component enhances the learning experience by integrating an interactive game focused on machine learning concepts.
 
-**Number Input** is designed to allow the user to input a numerical answer in response to a question. It is particularly unique as it only considers the first item's response and treats any numeric input as correct, storing this value as the user's score.
-
-[Visit the **Number Input** wiki](https://github.com/adaptlearning/adapt-textInput/wiki) for more detailed information about its functionality and key properties.
+## Functionality
+The component's primary function is to collect data from the game hosted on [mlgame.learndata.info](https://mlgame.learndata.info/). It captures the player's score, the decision tree they created, and the data table used in the game. This integration allows users to directly see the results of their decision-making process in the context of machine learning.
 
 ## Installation
+To incorporate the Adapt ODI Machine Learning Game Component into Adapt courses, follow these steps, similar to installing other Adapt components:
 
-As a specialized component developed by the Open Data Institute, **Number Input** can be integrated into Adapt courses. The installation process is similar to other Adapt components:
+- **Adapt CLI**: Use the command line interface of Adapt to install the component. Run the following command:
+  ```
+  adapt install adapt-odi-ml-game
+  ```
+- **Adapt Authoring Tool**: In the Adapt authoring tool, this component can be added through the Plug-in Manager.
 
-* To install **Number Input** in the Adapt framework, run the following command with the [Adapt CLI](https://github.com/adaptlearning/adapt-cli):
-
-Alternatively, add `"number-input": "*"` to the *adapt.json* file and then run `adapt install`.
-
-* For installation in the Adapt authoring tool, use the [Plug-in Manager](https://github.com/adaptlearning/adapt_authoring/wiki/Plugin-Manager).
-
-## Settings Overview
-
-**Number Input** is configured in *components.json*, with its configuration formatted as JSON in [*example.json*](https://github.com/adaptlearning/adapt-numberInput/blob/master/example.json).
+## Configuration
+The component is configured within the `components.json` file of an Adapt course. The configuration follows the JSON format, outlined in an example file named `example.json`.
 
 ### Attributes
-
-The component uses several attributes for configuration, including the standard ones for Adapt question components.
-
-**\_component** (string): This must be `number-input`.
-
-**\_classes**, **\_layout**, **instruction**, **ariaQuestion**, **\_attempts**, **\_shouldDisplayAttempts**, **\_isRandom**, **\_questionWeight**, **\_canShowModelAnswer**, **\_canShowFeedback**, **\_canShowMarking**, **\_recordInteraction**, **\_allowsAnyCase**, **\_allowsPunctuation**, and **\_feedback** follow the same structure as in the original Text Input component.
-
-**\_items** (object array): Only the first item's user input is considered for scoring. Each item can contain a **prefix**, **suffix**, and **placeholder**.
+- **_component (string)**: This must be set to `adapt-odi-ml-game`.
+- The component includes several other attributes for configuration, similar to standard Adapt components, such as `_classes`, `_layout`, `instruction`, and accessibility features.
 
 ### Accessibility
-**Number Input** retains the accessibility features from the original component, ensuring a smooth experience for users with assistive technologies.
+The Adapt ODI Machine Learning Game Component maintains all standard accessibility features, ensuring compatibility with various assistive technologies.
 
-### Limitations
-No known limitations.
+## Limitations
+Currently, there are no known limitations for this component.
 
----
+## Additional Information
+For more detailed information about its functionality and key properties, visit the Adapt ODI Machine Learning Game Component wiki page.
 
-**Author / maintainer:** Open Data Institute with contributions from the community.
-**Accessibility support:** WAI AA
-**RTL support:** Yes
-**Cross-platform coverage:** Chrome, Chrome for Android, Firefox (ESR + latest version), Edge, IE11, Safari 12+13 for macOS/iOS/iPadOS, Opera
+## Author / Maintainer
+The component is developed and maintained by the Open Data Institute with contributions from the Adapt community.
+
+## Support
+- **Accessibility Support**: WAI AA
+- **RTL (Right-to-Left) Support**: Yes
+- **Cross-Platform Coverage**: Supported on major platforms including Chrome, Firefox (ESR + latest version), Edge, IE11, Safari for macOS/iOS/iPadOS, and Opera.

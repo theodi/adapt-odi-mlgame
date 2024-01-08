@@ -1,5 +1,5 @@
 import QuestionView from "core/js/views/questionView";
-class NumberInputView extends QuestionView {
+class mlGameView extends QuestionView {
   initialize() {
     super.initialize();
     this.listenTo(this.model, "scoreUpdated", this.updateScoreInInputs);
@@ -184,7 +184,7 @@ function createBranchesHtml(predictions, boundaryValue) {
     this.model.get("_items").forEach((item, index) => {
       item.userAnswer = score;
 
-      const $input = this.$(`.js-numberinput-numberbox:eq(${index})`);
+      const $input = this.$(`.js-mlgame-numberbox:eq(${index})`);
       $input.val(score);
 
       this.model.setItemUserAnswer(index, score);
@@ -192,9 +192,9 @@ function createBranchesHtml(predictions, boundaryValue) {
   }
   events() {
     return {
-      "focus .js-numberinput-numberbox": "clearValidationError",
-      "change .js-numberinput-numberbox": "onInputChanged",
-      "keyup .js-numberinput-numberbox": "onInputChanged",
+      "focus .js-mlgame-numberbox": "clearValidationError",
+      "change .js-mlgame-numberbox": "onInputChanged",
+      "keyup .js-mlgame-numberbox": "onInputChanged",
     };
   }
 
@@ -217,7 +217,7 @@ function createBranchesHtml(predictions, boundaryValue) {
   updateInputFieldsWithPresetScore() {
     const presetScore = this.model.get("_score");
     this.model.get("_items").forEach((item, index) => {
-      const $input = this.$(`.js-numberinput-numberbox:eq(${index})`);
+      const $input = this.$(`.js-mlgame-numberbox:eq(${index})`);
       $input.val(presetScore);
     });
   }
@@ -236,7 +236,7 @@ function createBranchesHtml(predictions, boundaryValue) {
 
   setAllItemsEnabled(isEnabled) {
     this.model.get("_items").forEach((item, index) => {
-      const $itemInput = this.$(".js-numberinput-numberbox").eq(index);
+      const $itemInput = this.$(".js-mlgame-numberbox").eq(index);
 
       $itemInput.prop("disabled", !isEnabled);
     });
@@ -250,13 +250,13 @@ function createBranchesHtml(predictions, boundaryValue) {
   updateInputFieldsWithPresetScore() {
     const presetScore = this.model.get("_score");
     this.model.get("_items").forEach((item, index) => {
-      const $input = this.$(`.js-numberinput-numberbox:eq(${index})`);
+      const $input = this.$(`.js-mlgame-numberbox:eq(${index})`);
       $input.val(presetScore);
     });
   }
 
   clearValidationError() {
-    this.$(".js-numberinput-numberbox").removeClass("has-error");
+    this.$(".js-mlgame-numberbox").removeClass("has-error");
   }
 
   onCannotSubmit() {
@@ -264,14 +264,14 @@ function createBranchesHtml(predictions, boundaryValue) {
   }
 
   showValidationError() {
-    this.$(".js-numberinput-numberbox").addClass("has-error");
+    this.$(".js-mlgame-numberbox").addClass("has-error");
   }
 
   showMarking() {
     if (!this.model.get("_canShowMarking")) return;
 
     this.model.get("_items").forEach((item, i) => {
-      const $item = this.$(".js-numberinput-item").eq(i);
+      const $item = this.$(".js-mlgame-item").eq(i);
       $item
         .removeClass("is-correct is-incorrect")
         .addClass(item._isCorrect ? "is-correct" : "is-incorrect");
@@ -279,7 +279,7 @@ function createBranchesHtml(predictions, boundaryValue) {
   }
 
   resetQuestion() {
-    this.$(".js-numberinput-numberbox")
+    this.$(".js-mlgame-numberbox")
       .prop("disabled", !this.model.get("_isEnabled"))
       .val("");
 
@@ -296,20 +296,20 @@ function createBranchesHtml(predictions, boundaryValue) {
       const correctAnswer = correctAnswers
         ? correctAnswers[index][0]
         : item._answers[0];
-      this.$(".js-numberinput-numberbox").eq(index).val(correctAnswer);
+      this.$(".js-mlgame-numberbox").eq(index).val(correctAnswer);
     });
   }
 
   hideCorrectAnswer() {
     this.model.get("_items").forEach((item, index) => {
-      this.$(".js-numberinput-numberbox").eq(index).val(item.userAnswer);
+      this.$(".js-mlgame-numberbox").eq(index).val(item.userAnswer);
     });
   }
 
   onInputChanged(e) {
     const $input = $(e.target);
     const inputVal = $input.val();
-    const index = $input.parents(".js-numberinput-item").index();
+    const index = $input.parents(".js-mlgame-item").index();
 
     if (inputVal !== "" && !$.isNumeric(inputVal)) {
       $input.val("");
@@ -320,6 +320,6 @@ function createBranchesHtml(predictions, boundaryValue) {
   }
 }
 
-NumberInputView.template = "numberinput.jsx";
+mlGameView.template = "mlgame.jsx";
 
-export default NumberInputView;
+export default mlGameView;

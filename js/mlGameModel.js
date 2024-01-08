@@ -1,7 +1,7 @@
 import QuestionModel from "core/js/models/questionModel";
 import Adapt from "core/js/adapt";
 
-class NumberInputModel extends QuestionModel {
+class mlGameModel extends QuestionModel {
   initialize(...args) {
     super.initialize(...args);
     
@@ -79,10 +79,10 @@ class NumberInputModel extends QuestionModel {
     const genericAnswers = this.get("_answers");
     this.get("_items").forEach((item) => {
       const answerIndex = userAnswer[item._index];
-      if (answerIndex >= NumberInputModel.genericAnswerIndexOffset) {
+      if (answerIndex >= mlgameModel.genericAnswerIndexOffset) {
         item.userAnswer =
           genericAnswers[
-            answerIndex - NumberInputModel.genericAnswerIndexOffset
+            answerIndex - mlgameModel.genericAnswerIndexOffset
           ];
         item._answerIndex = answerIndex;
       } else if (answerIndex > -1) {
@@ -157,7 +157,7 @@ class NumberInputModel extends QuestionModel {
         usedAnswerIndexes.push(answerIndex);
         item._isCorrect = true;
         item._answerIndex =
-          answerIndex + NumberInputModel.genericAnswerIndexOffset;
+          answerIndex + mlgameModel.genericAnswerIndexOffset;
 
         this.set({
           _numberOfCorrectAnswers: ++numberOfCorrectAnswers,
@@ -246,6 +246,6 @@ class NumberInputModel extends QuestionModel {
   }
 }
 
-NumberInputModel.genericAnswerIndexOffset = 65536;
+mlGameModel.genericAnswerIndexOffset = 65536;
 
-export default NumberInputModel;
+export default mlGameModel;

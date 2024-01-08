@@ -1,14 +1,14 @@
 {
-  "name": "adapt-numberInput",
+  "name": "adapt-odi-mlgame",
   "version": "0.0.3",
   "framework": ">=5.19.1",
-  "homepage": "https://github.com/theodi/adapt-numberInput",
-  "bugs": "https://github.com/theodi/adapt-numberInput/issues",
-  "component": "numberinput",
-  "targetAttribute": "_numberinput",
-  "displayName": "Number Input",
+  "homepage": "https://github.com/theodi/adapt-odi-mlgame",
+  "bugs": "https://github.com/theodi/adapt-odi-mlgame/issues",
+  "component": "mlgame",
+  "targetAttribute": "_mlgame",
+  "displayName": "ML Game",
   "description": "A question component that allows the learner to input number based upon a question stem.",
-  "main": "/js/adapt-numberInput.js",
+  "main": "/js/adapt-mlgame.js",
   "keywords": [
     "adapt-plugin",
     "adapt-component"

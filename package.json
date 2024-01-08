@@ -1,14 +1,14 @@
 {
-  "name": "adapt-contrib-numberInput",
+  "name": "adapt-contrib-mlgame",
   "version": "7.2.7",
   "framework": ">=5.19.1",
-  "homepage": "https://github.com/adaptlearning/adapt-contrib-numberInput",
-  "bugs": "https://github.com/adaptlearning/adapt-contrib-numberInput/issues",
-  "component": "numberinput",
-  "targetAttribute": "_numberinput",
+  "homepage": "https://github.com/adaptlearning/adapt-contrib-mlgame",
+  "bugs": "https://github.com/adaptlearning/adapt-contrib-mlgame/issues",
+  "component": "mlgame",
+  "targetAttribute": "_mlgame",
   "displayName": "Text Input",
   "description": "A question component that allows the learner to input number based upon a question stem.",
-  "main": "/js/adapt-contrib-numberInput.js",
+  "main": "/js/adapt-contrib-mlgame.js",
   "keywords": [
     "adapt-plugin",
     "adapt-component"

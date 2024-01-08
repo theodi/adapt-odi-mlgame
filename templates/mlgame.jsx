@@ -1,7 +1,7 @@
 import React from 'react';
 import { classes, templates } from 'core/js/reactHelpers';
 
-export default function NumberInput (props) {
+export default function mlgame (props) {
   const {
     _isInteractionComplete,
     _id,
@@ -17,12 +17,12 @@ export default function NumberInput (props) {
   } = props;
 
   return (
-    <div className="component__inner numberinput__inner">
+    <div className="component__inner mlgame__inner">
       <templates.header {...props} />
       {/* complex unless and if combination to set the correct classes for CSS to use in showing marking and disabled states */}
       <div
         className={classes([
-          "component__widget numberinput__widget",
+          "component__widget mlgame__widget",
           !_isEnabled && "is-disabled",
           _isInteractionComplete && "is-complete is-submitted show-user-answer",
           _isCorrect && "is-correct",
@@ -41,16 +41,16 @@ export default function NumberInput (props) {
           ) => (
             <div
               className={classes([
-                "numberinput-item js-numberinput-item",
+                "mlgame-item js-mlgame-item",
                 _shouldShowMarking && _isCorrect && "is-correct",
                 _shouldShowMarking && !_isCorrect && "is-incorrect",
               ])}
               key={_index}
             >
               {prefix && (
-                <div className="numberinput-item__prefix-container">
+                <div className="mlgame-item__prefix-container">
                   <label
-                    className="numberinput-item__prefix"
+                    className="mlgame-item__prefix"
                     id={`${_id}-${index}-aria`}
                     htmlFor={`${_id}-${index}`}
                     aria-label={prefix}
@@ -59,9 +59,9 @@ export default function NumberInput (props) {
                 </div>
               )}
 
-              <div className="numberinput-item__numberbox-container">
+              <div className="mlgame-item__numberbox-container">
                 <input
-                  className="numberinput-item__numberbox js-numberinput-numberbox"
+                  className="mlgame-item__numberbox js-mlgame-numberbox"
                   type="number"
                   placeholder={placeholder}
                   data-id={`${input}-${index}`}
@@ -71,15 +71,15 @@ export default function NumberInput (props) {
                   defaultValue={presetScore || userAnswer} // Use presetScore as default value
                   disabled={!_isEnabled}
                 />
-                <div className="numberinput-item__state">
+                <div className="mlgame-item__state">
                   <div
-                    className="numberinput-item__icon numberinput-item__correct-icon"
+                    className="mlgame-item__icon mlgame-item__correct-icon"
                     aria-label={_globals._accessibility._ariaLabels.correct}
                   >
                     <div className="icon" aria-hidden="true" />
                   </div>
                   <div
-                    className="numberinput-item__icon numberinput-item__incorrect-icon"
+                    className="mlgame-item__icon mlgame-item__incorrect-icon"
                     aria-label={_globals._accessibility._ariaLabels.incorrect}
                   >
                     <div className="icon" aria-hidden="true" />
@@ -88,9 +88,9 @@ export default function NumberInput (props) {
               </div>
 
               {suffix && (
-                <div className="numberinput-item__suffix-container">
+                <div className="mlgame-item__suffix-container">
                   <label
-                    className="numberinput-item__suffix"
+                    className="mlgame-item__suffix"
                     id={`${_id}-${index}-aria`}
                     htmlFor={`${_id}-${index}`}
                     aria-label={suffix}

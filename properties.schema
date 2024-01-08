@@ -7,7 +7,7 @@
     "ariaRegion": {
       "type": "string",
       "required": true,
-      "default": "Number input. Type your answer and then submit.",
+      "default": "ML Game. Type your answer and then submit.",
       "inputType": "Text",
       "validators": [],
       "translatable": true

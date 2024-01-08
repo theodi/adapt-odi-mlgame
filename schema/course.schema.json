@@ -1,5 +1,5 @@
 {
-  "$anchor": "numberinput-course",
+  "$anchor": "mlgame-course",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
   "$patch": {
@@ -16,7 +16,7 @@
               "type": "object",
               "default": {},
               "properties": {
-                "_numberinput": {
+                "_mlgame": {
                   "type": "object",
                   "title": "Text Input",
                   "default": {},
