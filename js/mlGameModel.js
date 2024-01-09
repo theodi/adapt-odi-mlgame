@@ -6,13 +6,15 @@ class mlGameModel extends QuestionModel {
     super.initialize(...args);
 
     this.get("_buttons")._submit.buttonText = "Awaiting Score";
-    //this.set("_userId", userId);
-    this.set("_userId", "ForJack");
+    const userId = Adapt.spoor.scorm.scorm.get("cmi.core.student_id");
+    this.set("_userId", userId);
+    if (this.get("testUserId")) {
+      this.set("_userId", this.get("testUserId"));
+    }
     this.set("_maxScore", 600);
   }
 
   async fetchScore() {
-    // const userId = "ForJack"
     const baseUrl = this.get('baseUrl');
     const gameId = this.get('gameId');
     const userId = this.get('_userId');
@@ -44,10 +46,6 @@ class mlGameModel extends QuestionModel {
       this.trigger("noScoreAvailable");
       setTimeout(() => this.fetchScore(), 5000);
     }
-  }
-
-  setScore(score) {
-    this.set("_score", score);
   }
 
   /**

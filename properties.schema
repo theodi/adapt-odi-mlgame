@@ -30,13 +30,22 @@
       "help": "This is the base URL of the game. It must end in a /",
       "translatable": false
     },
-     "gameId": {
+    "gameId": {
       "type": "string",
       "required": true,
       "default": "",
       "inputType": "Text",
       "validators": [ "required" ],
       "help": "This is the game ID.",
+      "translatable": false
+    },
+    "testUserId": {
+      "type": "string",
+      "required": false,
+      "default": "",
+      "inputType": "Text",
+      "validators": [ ],
+      "help": "Override the user ID (ONLY USE FOR TESTING!)",
       "translatable": false
     },
     "instruction": {
