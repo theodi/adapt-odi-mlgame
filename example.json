@@ -1,56 +1,22 @@
-    // Ordered, multiple correct answer variations
-    // --------------------------------------------------
+
     {
         "_id": "c-05",
         "_parentId": "b-05",
         "_type": "component",
-        "_component": "textinput",
+        "_component": "mlgame",
         "_classes": "",
         "_layout": "full",
-        "title": "Title of our text input component",
-        "displayTitle": "Title of our text input component",
-        "body": "If A is 1% and Z is 26%, what are B, C and D?",
-        "instruction": "Input your answer and select Submit.",
+        "title": "Title of our component",
+        "displayTitle": "Title of our component",
+        "body": "Play the game at the link.",
+        "baseUrl": "https://example.com/game/",
+        "gameId": "",
         "ariaQuestion": "",
-        "_attempts": 1,
-        "_shouldDisplayAttempts": false,
-        "_isRandom": false,
         "_questionWeight": 1,
-        "_canShowModelAnswer": true,
-        "_canShowFeedback": true,
+        "_canShowModelAnswer": false,
+        "_canShowFeedback": false,
         "_canShowMarking": true,
         "_recordInteraction": true,
-        "_allowsAnyCase": true,
-        "_allowsPunctuation": true,
-        "_items": [
-            {
-                "_answers": [
-                    "2",
-                    "two"
-                ],
-                "prefix": "B:",
-                "suffix": "%",
-                "placeholder": "Enter answer here"
-            },
-            {
-                "_answers": [
-                    "3",
-                    "three"
-                ],
-                "prefix": "C:",
-                "suffix": "%",
-                "placeholder": "Enter answer here"
-            },
-            {
-                "_answers": [
-                    "4",
-                    "four"
-                ],
-                "prefix": "D:",
-                "suffix": "%",
-                "placeholder": "Enter answer here"
-            }
-        ],
         "_feedback": {
             "title": "Feedback",
             "altTitle": "Alt feedback title text",
@@ -92,37 +58,4 @@
         "_pageLevelProgress": {
             "_isEnabled": true
         }
-    }
-
-    // Unordered, single correct answer variations
-    // --------------------------------------------------
-    {
-        "_answers": [
-            ["alpha"],
-            ["beta"],
-            ["gamma"],
-            ["delta"]
-        ],
-        "_items": [
-            {
-                "prefix": "",
-                "suffix": "",
-                "placeholder": "Enter answer here"
-            },
-            {
-                "prefix": "",
-                "suffix": "",
-                "placeholder": "Enter answer here"
-            },
-            {
-                "prefix": "",
-                "suffix": "",
-                "placeholder": "Enter answer here"
-            },
-            {
-                "prefix": "",
-                "suffix": "",
-                "placeholder": "Enter answer here"
-            }
-        ]
     }

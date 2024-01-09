@@ -4,18 +4,19 @@ import Adapt from "core/js/adapt";
 class mlGameModel extends QuestionModel {
   initialize(...args) {
     super.initialize(...args);
-    
-    this.get("_buttons")._submit.buttonText = "Awaiting Score";
-    
-    const userId = Adapt.spoor.scorm.scorm.get("cmi.core.student_id");
-    this.set("_userId", userId);
 
-    this.pollForScore();
+    this.get("_buttons")._submit.buttonText = "Awaiting Score";
+    //this.set("_userId", userId);
+    this.set("_userId", "ForJack");
+    this.set("_maxScore", 600);
   }
 
   async fetchScore() {
     // const userId = "ForJack"
-    const url = `https://mlgame.learndata.info/game/63cf10e9631a60aab279c391/result?userId=${userId}`;
+    const baseUrl = this.get('baseUrl');
+    const gameId = this.get('gameId');
+    const userId = this.get('_userId');
+    const url = baseUrl + gameId + "/result?userId=" + userId;
 
     try {
       const response = await fetch(url);
@@ -25,22 +26,26 @@ class mlGameModel extends QuestionModel {
         this.set("_userTree", data.tree);
         this.trigger("decisionTreeDataFetched", data.tree);
         this.set("_userTableData", data);
+        this.setQuestionAsSubmitted();
+        this.markQuestion();
         this.trigger("tableDataFetched", data);
         this.setScore(data.score);
         this.trigger("scoreUpdated", data.score);
         this.markAsComplete();
-        console.log("submitScore");
+        this.setupFeedback();
       } else {
         this.showGameLink();
+        setTimeout(() => this.fetchScore(), 5000);
         this.trigger("noScoreAvailable");
       }
     } catch (error) {
       console.error("Error fetching score:", error);
       this.showGameLink();
-
       this.trigger("noScoreAvailable");
+      setTimeout(() => this.fetchScore(), 5000);
     }
   }
+
   setScore(score) {
     this.set("_score", score);
   }
@@ -58,18 +63,6 @@ class mlGameModel extends QuestionModel {
       _isCorrect: null,
     });
     return true;
-  }
-
-  markGenericAnswers() {
-    this.get("_items").forEach((item) => {
-      item._isCorrect = true;
-    });
-  }
-  setupQuestionItemIndexes() {
-    this.get("_items").forEach((item, index) => {
-      if (item._index === undefined) item._index = index;
-      if (item._answerIndex === undefined) item._answerIndex = -1;
-    });
   }
 
   restoreUserAnswers() {
@@ -109,29 +102,11 @@ class mlGameModel extends QuestionModel {
   }
 
   canSubmit() {
-    return this.get("_items").every(({ userAnswer }) => userAnswer);
-  }
-  setItemUserAnswer(itemIndex, userAnswer) {
-    const item = this.get("_items")[itemIndex];
-    if ($.isNumeric(userAnswer)) {
-      item.userAnswer = userAnswer;
-    } else {
-      item.userAnswer = "";
-      item._isCorrect = false;
-    }
-    this.checkCanSubmit();
+    return true;
   }
 
-  storeUserAnswer() {
-    const items = this.get("_items");
-
-    this.isCorrect();
-
-    const userAnswer = new Array(items.length);
-    items.forEach(
-      ({ _index, _answerIndex }) => (userAnswer[_index] = _answerIndex)
-    );
-    this.set("_userAnswer", userAnswer);
+  canReset() {
+    return false;
   }
 
   isCorrect() {
@@ -139,70 +114,22 @@ class mlGameModel extends QuestionModel {
   }
 
   isPartlyCorrect() {
-    return this.get("_isAtLeastOneCorrectSelection");
+    return true;
   }
 
-  markGenericAnswers() {
-    let numberOfCorrectAnswers = 0;
-    const correctAnswers = this.get("_answers").slice();
-    const usedAnswerIndexes = [];
-
-    this.get("_items").forEach((item) => {
-      correctAnswers.forEach((answerGroup, answerIndex) => {
-        if (usedAnswerIndexes.includes(answerIndex)) return;
-
-        if (this.checkAnswerIsCorrect(answerGroup, item.userAnswer) === false)
-          return;
-
-        usedAnswerIndexes.push(answerIndex);
-        item._isCorrect = true;
-        item._answerIndex =
-          answerIndex + mlgameModel.genericAnswerIndexOffset;
-
-        this.set({
-          _numberOfCorrectAnswers: ++numberOfCorrectAnswers,
-          _isAtLeastOneCorrectSelection: true,
-        });
-      });
-      if (!item._isCorrect) item._isCorrect = false;
-    });
-  }
-
-  markSpecificAnswers() {
-    this.get("_items").forEach((item) => {
-      item._isCorrect = true;
-    });
-  }
-
-  checkAnswerIsCorrect(possibleAnswers, userAnswer) {
-    const uAnswer = this.cleanupUserAnswer(userAnswer);
-
-    const answerIsCorrect = possibleAnswers.some((cAnswer) => {
-      return this.cleanupUserAnswer(cAnswer) === uAnswer;
-    });
-    return answerIsCorrect;
-  }
-
-  cleanupUserAnswer(userAnswer) {
-    if (this.get("_allowsAnyCase")) {
-      userAnswer = userAnswer.toLowerCase();
-    }
-    if (this.get("_allowsPunctuation")) {
-      userAnswer = userAnswer.replace(/[.,-/#!$£%^&*;:{}=\-_`~()]/g, "");
-
-      userAnswer = userAnswer.replace(/(  +)+/g, " ");
-    }
-
-    return userAnswer.trim();
-  }
-  pollForScore() {
-    const pollInterval = 10000;
-    this.pollingIntervalId = setInterval(() => {
-      this.fetchScore();
-    }, pollInterval);
-  }
   setScore(score) {
     this.set("_score", score);
+  }
+
+  get maxScore() {
+    return 600;
+  }
+
+  /**
+   * @type {number}
+   */
+  get minScore() {
+    return 0;
   }
 
   markAsComplete() {
@@ -210,20 +137,13 @@ class mlGameModel extends QuestionModel {
   }
 
   resetUserAnswer() {
-    this.get("_items").forEach((item) => {
-      item._isCorrect = false;
-      item.userAnswer = "";
-    });
+    // TODO
   }
 
   showGameLink() {
     const gameLink =
       "https://mlgame.learndata.info/game/63cf10e9631a60aab279c391/";
     this.set("_gameLink", gameLink);
-  }
-
-  clearPolling() {
-    clearInterval(this.pollingIntervalId);
   }
 
   /**

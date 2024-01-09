@@ -2,22 +2,18 @@ import QuestionView from "core/js/views/questionView";
 class mlGameView extends QuestionView {
   initialize() {
     super.initialize();
-    this.listenTo(this.model, "scoreUpdated", this.updateScoreInInputs);
+    this.listenTo(this.model, "scoreUpdated", this.updateScore);
     this.listenTo(this.model, "noScoreAvailable", this.renderGameLink);
-    this.listenTo(
-      this.model,
-      "decisionTreeDataFetched",
-      this.onDecisionTreeDataFetched
-    );
+    this.listenTo(this.model, "decisionTreeDataFetched", this.onDecisionTreeDataFetched );
     this.listenTo(this.model, "tableDataFetched", this.onTableDataFetched);
   }
 
   onTableDataFetched() {
     const tableData = this.model.get("_userTableData");
-       const table = document.createElement("table");
-       table.style.width = "100%";
-       table.style.borderCollapse = "collapse";
-       table.style.textAlign = "left";
+    const table = document.createElement("table");
+    table.style.width = "100%";
+    table.style.borderCollapse = "collapse";
+    table.style.textAlign = "left";
     const thead = document.createElement("thead");
     const tbody = document.createElement("tbody");
     table.appendChild(thead);
@@ -73,37 +69,37 @@ class mlGameView extends QuestionView {
     // Player's scores
     const playerResults = Object.keys(tableData.result).map(
       (run) => tableData.result[run].player
-    );
+      );
     addDataRow(
       "You",
       `${tableData.confidences.player}%`,
       "% correctly classified (a)",
       playerResults
-    );
+      );
 
     // % correctly classified (a)
     // Difference from confidence
     const diffResults = Object.keys(tableData.result).map(
       (run) => tableData.result[run].playerDiff
-    );
+      );
     addDataRow("", "", "Difference from confidence (b)", diffResults);
 
     // Score (a - b)
     const scoreABResults = Object.keys(tableData.result).map(
       (run) => tableData.result[run].player - tableData.result[run].playerDiff
-    );
+      );
     addDataRow("", "", "Score (a - b)", scoreABResults);
 
     // vs Machine results
     const machineResults = Object.keys(tableData.result).map((run) =>
-      tableData.result[run].beatMachine ? "+10 (You win)" : "0"
+    tableData.result[run].beatMachine ? "+10 (You win)" : "0"
     );
     addDataRow(
       "vs Machine",
       `${tableData.confidences.machine}%`,
       "",
       machineResults
-    );
+      );
 
     // vs Human+ML results
     const hybridResults = Object.keys(tableData.result).map((run) => {
@@ -120,82 +116,95 @@ class mlGameView extends QuestionView {
     // Total score
     const totalResults = Object.keys(tableData.result).map(
       (run) => tableData.result[run].score
-    );
+      );
     addDataRow("Total", "", "", totalResults);
 
-
     this.$(".table-container").html(table);
-}
+  }
+
+  translateDecisionTree(treeData, factorKey) {
+    const node = {};
+
+    const factor = treeData.factors[factorKey];
+    if (factorKey == "_") {
+      factorKey = "";
+    }
+    const boundary = treeData.boundaries[factorKey + "a"];
+    const prediction = treeData.predictions[factorKey];
+
+    if (factor) {
+      node.factor = factor;
+      node.boundary = boundary;
+      node.left = this.translateDecisionTree(treeData, factorKey + "l");
+      node.right = this.translateDecisionTree(treeData, factorKey + "r");
+    }
+
+    if (prediction) {
+      node.prediction = prediction.prediction;
+    }
+
+    return node;
+  }
+
+  translateToNestedLists(treeNode,level) {
+    const ul = document.createElement("ul");
+    if (treeNode.factor) {
+      this.$(".list-container").css("min-height", level * 150 + "px");
+      level = level + 1;
+      const li = document.createElement("li");
+      const factorSpan = document.createElement("span");
+      factorSpan.classList.add("tree-item-factor");
+      factorSpan.textContent = `${treeNode.factor} (${treeNode.boundary})`;
+      li.appendChild(factorSpan);
+      const boundaryUl = document.createElement("ul");
+
+      if (treeNode.left) {
+        const boundaryLi = document.createElement("li");
+        boundaryLi.textContent = "<=" + treeNode.boundary;
+        const newLeftUl = this.translateToNestedLists(treeNode.left,level);
+        boundaryLi.appendChild(newLeftUl);
+        boundaryUl.appendChild(boundaryLi);
+        li.appendChild(boundaryUl);
+      }
+
+      if (treeNode.right) {
+        const boundaryLi = document.createElement("li");
+        boundaryLi.textContent = ">" + treeNode.boundary;
+        const rightUl = this.translateToNestedLists(treeNode.right,level);
+        boundaryLi.appendChild(rightUl);
+        boundaryUl.appendChild(boundaryLi);
+        li.appendChild(boundaryUl);
+      }
+
+      ul.appendChild(li);
+    } else if (treeNode.prediction) {
+      const li = document.createElement("li");
+      const predictionSpan = document.createElement("span");
+      predictionSpan.classList.add("tree-item-prediction");
+      predictionSpan.textContent = treeNode.prediction;
+      li.appendChild(predictionSpan);
+      ul.appendChild(li);
+    }
+
+    return ul;
+  }
+
   onDecisionTreeDataFetched() {
-     let html = "<ul>";
-const treeData = this.model.get("_userTree")
-  // Root node
-  html += `<li><span class="tree-item-root">${treeData.factors._}</span>`;
-  html += "<ul>";
-
-  // Level 2 nodes: Elevation <= 11 and > 11
-  // Left branch (<= 11)
-  html += `<li>&lt;= ${treeData.boundaries.a}<ul>`;
-  html += `<li><span class="tree-item-factor">${treeData.factors.l} (${treeData.boundaries.la})</span><ul>`; // Applying 'tree-item' to factor only
-  html += createBranchesHtml(treeData.predictions.ll, treeData.boundaries.la);
-  html += "</ul></li></ul></li>";
-
-  // Right branch (> 11)
-  html += `<li>&gt; ${treeData.boundaries.a}<ul>`;
-  html += `<li><span class="tree-item-factor">${treeData.factors.r} (${treeData.boundaries.ra})</span><ul>`; // Applying 'tree-item' to factor only
-  html += createBranchesHtml(treeData.predictions.rr, treeData.boundaries.ra);
-  html += "</ul></li></ul></li>";
-
-  html += "</ul></li></ul>";
-  console.log(html);
-   this.$(".list-container").html(html);
-
-
-// Helper function to create branches for each prediction
-function createBranchesHtml(predictions, boundaryValue) {
-  let html = "";
-
-  // Assuming predictions contain only "New York" and "San Francisco"
-  html += `<li>&gt;= ${boundaryValue}<ul>`;
-  html += `<li><span class="tree-item-prediction">${
-    predictions["San Francisco"] > predictions["New York"]
-      ? "San Francisco"
-      : "New York"
-  }</span></li>`;
-  html += `</ul></li>`;
-
-  html += `<li>&lt;= ${boundaryValue}<ul>`;
-  html += `<li><span class="tree-item-prediction">${
-    predictions["New York"] >= predictions["San Francisco"]
-      ? "New York"
-      : "San Francisco"
-  }</span></li>`;
-  html += `</ul></li>`;
-
-  return html;
-}
+    const treeData = this.translateDecisionTree(this.model.get("_userTree"),"_");
+    this.$(".list-container").html(this.translateToNestedLists(treeData,1));
   }
 
-  updateScoreInInputs(score) {
-         this.model.get("_buttons")._submit.buttonText = "Score Submitted";
-         this.model.setQuestionAsSubmitted()
-         this.model.updateButtons();
-
-    this.model.get("_items").forEach((item, index) => {
-      item.userAnswer = score;
-
-      const $input = this.$(`.js-mlgame-numberbox:eq(${index})`);
-      $input.val(score);
-
-      this.model.setItemUserAnswer(index, score);
-    });
+  updateScore(score) {
+    this.$(".js-btn-action").click();
+    this.$(".js-btn-action").text("Result found");
+    this.$(".component__instruction").hide();
+    this.$(".your-score").html(score);
+    this.$(".score-container").show();
+    this.model.setQuestionAsSubmitted()
+    this.model.updateButtons();
   }
+
   events() {
-    return {
-      "focus .js-mlgame-numberbox": "clearValidationError",
-      "change .js-mlgame-numberbox": "onInputChanged",
-      "keyup .js-mlgame-numberbox": "onInputChanged",
-    };
   }
 
   renderGameLink() {
@@ -203,8 +212,8 @@ function createBranchesHtml(predictions, boundaryValue) {
     if (gameLink) {
       this.$(".game-link-container").html(
         `<div> <span>No score found</span> <a href="${gameLink}" target="_blank">Play the Game</a><span> to receive a score</span></div>`
-      );
-    }
+        );
+      }
   }
 
   onQuestionPreRender() {
@@ -241,10 +250,12 @@ function createBranchesHtml(predictions, boundaryValue) {
       $itemInput.prop("disabled", !isEnabled);
     });
   }
+
   onQuestionRendered() {
     super.onQuestionRendered();
-    this.updateInputFieldsWithPresetScore();
+    //this.updateInputFieldsWithPresetScore();
     this.setReadyStatus();
+    this.model.fetchScore();
   }
 
   updateInputFieldsWithPresetScore() {
@@ -273,15 +284,15 @@ function createBranchesHtml(predictions, boundaryValue) {
     this.model.get("_items").forEach((item, i) => {
       const $item = this.$(".js-mlgame-item").eq(i);
       $item
-        .removeClass("is-correct is-incorrect")
-        .addClass(item._isCorrect ? "is-correct" : "is-incorrect");
+      .removeClass("is-correct is-incorrect")
+      .addClass(item._isCorrect ? "is-correct" : "is-incorrect");
     });
   }
 
   resetQuestion() {
     this.$(".js-mlgame-numberbox")
-      .prop("disabled", !this.model.get("_isEnabled"))
-      .val("");
+    .prop("disabled", !this.model.get("_isEnabled"))
+    .val("");
 
     this.model.set({
       _isAtLeastOneCorrectSelection: false,
@@ -294,8 +305,8 @@ function createBranchesHtml(predictions, boundaryValue) {
 
     this.model.get("_items").forEach((item, index) => {
       const correctAnswer = correctAnswers
-        ? correctAnswers[index][0]
-        : item._answers[0];
+      ? correctAnswers[index][0]
+      : item._answers[0];
       this.$(".js-mlgame-numberbox").eq(index).val(correctAnswer);
     });
   }

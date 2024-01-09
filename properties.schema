@@ -21,10 +21,28 @@
       "default": "both",
       "editorOnly": true
     },
+    "baseUrl": {
+      "type": "string",
+      "required": true,
+      "default": "http://example.com/game/",
+      "inputType": "Text",
+      "validators": [ "required" ],
+      "help": "This is the base URL of the game. It must end in a /",
+      "translatable": false
+    },
+     "gameId": {
+      "type": "string",
+      "required": true,
+      "default": "",
+      "inputType": "Text",
+      "validators": [ "required" ],
+      "help": "This is the game ID.",
+      "translatable": false
+    },
     "instruction": {
       "type": "string",
       "required": false,
-      "default": "Input your answer and select Submit.",
+      "default": "Click the link below to play the game.",
       "inputType": "Text",
       "validators": [],
       "help": "This is the instruction text",
@@ -38,80 +56,6 @@
       "validators": [],
       "help": "This will be read out by screen readers instead of reading the 'Display title', 'Body' & 'Instruction' fields when focusing on the options. To be clear and concise, ensure the text encompasses only the question associated.",
       "translatable": true
-    },
-    "_items": {
-      "type": "array",
-      "required": true,
-      "title": "Input Items",
-      "items": {
-        "type": "object",
-        "required": false,
-        "properties": {
-          "_answers": {
-            "type": "array",
-            "required": false,
-            "title": "Answers",
-            "items": {
-              "type": "string",
-              "required": true,
-              "default": "",
-              "title": "Item",
-              "inputType": "Text",
-              "validators": ["required"],
-              "help": "",
-              "translatable": true
-            }
-          },
-          "prefix": {
-            "type": "string",
-            "required": false,
-            "default": "",
-            "title": "Prefix",
-            "inputType": "Text",
-            "validators": [],
-            "help": "Prefix for this item",
-            "translatable": true
-          },
-          "suffix": {
-            "type": "string",
-            "required": false,
-            "default": "",
-            "title": "Suffix",
-            "inputType": "Text",
-            "validators": [],
-            "help": "Suffix for this item",
-            "translatable": true
-          },
-          "placeholder": {
-            "type": "string",
-            "required": false,
-            "default": "",
-            "title": "Placeholder",
-            "inputType": "Text",
-            "validators": [],
-            "help": "Hint or expected value of the input field",
-            "translatable": true
-          }
-        }
-      }
-    },
-    "_attempts": {
-      "type": "number",
-      "required": true,
-      "default": 1,
-      "title": "Attempts",
-      "inputType": "Number",
-      "validators": ["required", "number"],
-      "help": "How many attempts the learner is allowed"
-    },
-    "_canShowModelAnswer": {
-      "type": "boolean",
-      "required": true,
-      "default": true,
-      "title": "Display Model Answer",
-      "inputType": "Checkbox",
-      "validators": [],
-      "help": "Allow the user to view the 'model answer' if they answer the question incorrectly?"
     },
     "_canShowFeedback": {
       "type": "boolean",
@@ -137,14 +81,6 @@
       "validators": [],
       "help": "Display the number of attempts remaining?"
     },
-    "_isRandom": {
-      "type": "boolean",
-      "required": false,
-      "default": false,
-      "title": "Randomise Items",
-      "inputType": "Checkbox",
-      "validators": []
-    },
     "_recordInteraction": {
       "type": "boolean",
       "required": false,
@@ -162,23 +98,6 @@
       "inputType": "Number",
       "validators": ["number"],
       "help": "How much this question is worth"
-    },
-    "_allowsAnyCase": {
-      "type": "boolean",
-      "required": true,
-      "default": false,
-      "title": "Allow 'any case' answers",
-      "inputType": "Checkbox",
-      "validators": [],
-      "help": "Should the check of the user's answer(s) be case-insensitive or case-sensitive?"
-    },
-    "_allowsPunctuation": {
-      "type": "boolean",
-      "required": true,
-      "default": false,
-      "title": "Allow Punctuation",
-      "inputType": "Checkbox",
-      "validators": []
     },
     "_feedback": {
       "type": "object",
@@ -394,26 +313,6 @@
               "translatable": true
             }
           }
-        },
-        "remainingAttemptsText": {
-          "type": "string",
-          "required": false,
-          "default": "",
-          "title": "Attempts Remaining Text",
-          "inputType": "QuestionButton",
-          "validators": [],
-          "help": "Shown when there are multiple attempts left",
-          "translatable": true
-        },
-        "remainingAttemptText": {
-          "type": "string",
-          "required": false,
-          "default": "",
-          "title": "Final Attempt Text",
-          "inputType": "QuestionButton",
-          "validators": [],
-          "help": "Shown when there is one attempt left",
-          "translatable": true
         }
       }
     }

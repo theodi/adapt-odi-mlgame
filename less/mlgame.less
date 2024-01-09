@@ -69,11 +69,12 @@
 }
 
 .list-container {
-  margin-left: -40px;
-  padding-top: 100px;
-  position: absolute;
+  display: block;
+  min-height: 0px;
 }
-
+.score-container {
+  display: none;
+}
 .list-container ul {
   padding: 20px;
   position: relative;
@@ -112,7 +113,7 @@
   border-left: 2px solid black;
 }
 
-/*We need to remove left-right connectors from elements without 
+/*We need to remove left-right connectors from elements without
 any siblings*/
 .list-container li:only-child::after,
 .list-container li:only-child::before {
@@ -156,7 +157,7 @@ any siblings*/
   /* Optional: to ensure text is readable over connectors */
 }
 
-/*Remove left connector from first child and 
+/*Remove left connector from first child and
 right connector from last child*/
 .list-container li:first-child::before,
 .list-container li:last-child::after {

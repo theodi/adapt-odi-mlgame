@@ -19,6 +19,10 @@ export default function mlgame (props) {
   return (
     <div className="component__inner mlgame__inner">
       <templates.header {...props} />
+      <div className="score-container">Your score: <b className="your-score"></b></div>
+      <div className="table-container"></div>
+      <div className="list-container"></div>
+      <div className="game-link-container"></div>
       {/* complex unless and if combination to set the correct classes for CSS to use in showing marking and disabled states */}
       <div
         className={classes([
@@ -60,17 +64,6 @@ export default function mlgame (props) {
               )}
 
               <div className="mlgame-item__numberbox-container">
-                <input
-                  className="mlgame-item__numberbox js-mlgame-numberbox"
-                  type="number"
-                  placeholder={placeholder}
-                  data-id={`${input}-${index}`}
-                  id={`${_id}-${index}`}
-                  aria-labelledby={prefix && `${_id}-${index}-aria`}
-                  aria-label={placeholder}
-                  defaultValue={presetScore || userAnswer} // Use presetScore as default value
-                  disabled={!_isEnabled}
-                />
                 <div className="mlgame-item__state">
                   <div
                     className="mlgame-item__icon mlgame-item__correct-icon"
@@ -101,10 +94,8 @@ export default function mlgame (props) {
             </div>
           )
         )}
-        <div className="table-container"></div>
-      <div className="list-container"></div>
-        <div className="game-link-container"></div>
-      </div>
+        </div>
+
       <div className="btn__container" />
     </div>
   );

@@ -1,13 +1,13 @@
 {
   "name": "adapt-odi-mlgame",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "framework": ">=5.19.1",
   "homepage": "https://github.com/theodi/adapt-odi-mlgame",
   "bugs": "https://github.com/theodi/adapt-odi-mlgame/issues",
   "component": "mlgame",
   "targetAttribute": "_mlgame",
-  "displayName": "ML Game",
-  "description": "A question component that allows the learner to input number based upon a question stem.",
+  "displayName": "ODI Machine Learning game support component",
+  "description": "A component that launches and external game and them polls it for the result to submit to the LMS.",
   "main": "/js/adapt-mlgame.js",
   "keywords": [
     "adapt-plugin",
