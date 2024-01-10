@@ -15,16 +15,16 @@ class mlGameModel extends QuestionModel {
   }
 
   async fetchScore() {
-    const baseUrl = this.get('baseUrl');
-    const gameId = this.get('gameId');
-    const userId = this.get('_userId');
+    const baseUrl = this.get("baseUrl");
+    const gameId = this.get("gameId");
+    const userId = this.get("userId");
     const url = baseUrl + gameId + "/result?userId=" + userId;
 
     try {
       const response = await fetch(url);
       const data = await response.json();
       if (data && data.score !== undefined && data.score !== null) {
-        // console.log("Score", data.score);
+        console.log("Score", data.score);
         this.set("_userTree", data.tree);
         this.trigger("decisionTreeDataFetched", data.tree);
         this.set("_userTableData", data);
@@ -72,9 +72,7 @@ class mlGameModel extends QuestionModel {
       const answerIndex = userAnswer[item._index];
       if (answerIndex >= mlgameModel.genericAnswerIndexOffset) {
         item.userAnswer =
-          genericAnswers[
-            answerIndex - mlgameModel.genericAnswerIndexOffset
-          ];
+          genericAnswers[answerIndex - mlgameModel.genericAnswerIndexOffset];
         item._answerIndex = answerIndex;
       } else if (answerIndex > -1) {
         item.userAnswer = item._answers[answerIndex];
@@ -116,9 +114,20 @@ class mlGameModel extends QuestionModel {
   }
 
   setScore(score) {
-    this.set("_score", score);
-  }
+    if (typeof score === "number" && !isNaN(score)) {
+      this.set("_score", score);
 
+      if (Adapt.spoor && Adapt.spoor.scorm && Adapt.spoor.scorm.scorm) {
+        Adapt.spoor.scorm.scorm.set("cmi.core.score.raw", score);
+        console.log("SCORM 1.2 Score Updated:", score);
+      }
+    } else {
+      console.warn(
+        "Invalid or undefined score, not updating SCORM score:",
+        score
+      );
+    }
+  }
   get maxScore() {
     return 600;
   }
