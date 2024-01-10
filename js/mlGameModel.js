@@ -17,7 +17,7 @@ class mlGameModel extends QuestionModel {
   async fetchScore() {
     const baseUrl = this.get("baseUrl");
     const gameId = this.get("gameId");
-    const userId = this.get("userId");
+    const userId = this.get("_userId");
     const url = baseUrl + gameId + "/result?userId=" + userId;
 
     try {
