@@ -13,6 +13,7 @@ class mlGameModel extends QuestionModel {
     }
     this.set("_maxScore", 600);
     this.set("_canSubmit", false);
+    this.set("_gameLink",this.get("baseUrl") + this.get("gameId"))
   }
 
   async fetchScore() {
@@ -144,12 +145,6 @@ class mlGameModel extends QuestionModel {
 
   resetUserAnswer() {
     // TODO
-  }
-
-  showGameLink() {
-    const gameLink =
-      "https://mlgame.learndata.info/game/63cf10e9631a60aab279c391/";
-    this.set("_gameLink", gameLink);
   }
 
   /**

@@ -3,7 +3,6 @@ class mlGameView extends QuestionView {
   initialize() {
     super.initialize();
     this.listenTo(this.model, "scoreUpdated", this.updateScore);
-    this.listenToOnce(this.model, "noScoreAvailable", this.renderGameLink);
     this.listenTo(this.model, "decisionTreeDataFetched", this.onDecisionTreeDataFetched );
     this.listenTo(this.model, "tableDataFetched", this.onTableDataFetched);
   }
@@ -195,7 +194,6 @@ class mlGameView extends QuestionView {
   }
 
   onDecisionTreeDataFetched() {
-    this.$(".game-link-container").hide();
     const treeData = this.translateDecisionTree(this.model.get("_userTree"),"_");
     this.$(".list-container").html(this.translateToNestedLists(treeData,1));
   }
@@ -216,9 +214,10 @@ class mlGameView extends QuestionView {
   renderGameLink() {
     const userId = this.model.get("_userId");
     const gameLink = this.model.get("_gameLink");
+    console.log(gameLink);
     if (gameLink) {
       this.$(".game-link-container").html(
-        `<div> <span>No score found</span> <a href="${gameLink}?userId=${userId}" target="_blank">Play the Game</a><span> to receive a score</span></div>`
+        `<button><a style="border-bottom: none;" href="${gameLink}?userId=${userId}" target="_blank">Click here to access the game</a></button>`
         );
       }
   }
@@ -260,7 +259,7 @@ class mlGameView extends QuestionView {
 
   onQuestionRendered() {
     super.onQuestionRendered();
-    //this.updateInputFieldsWithPresetScore();
+    this.renderGameLink();
     this.setReadyStatus();
     this.model.fetchScore();
   }

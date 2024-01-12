@@ -19,10 +19,10 @@ export default function mlgame (props) {
   return (
     <div className="component__inner mlgame__inner">
       <templates.header {...props} />
+      <div className="game-link-container"></div>
       <div className="score-container">Your score: <b className="your-score"></b></div>
       <div className="table-container"></div>
       <div className="list-container"></div>
-      <div className="game-link-container"></div>
       {/* complex unless and if combination to set the correct classes for CSS to use in showing marking and disabled states */}
       <div
         className={classes([
