@@ -3,7 +3,7 @@ class mlGameView extends QuestionView {
   initialize() {
     super.initialize();
     this.listenTo(this.model, "scoreUpdated", this.updateScore);
-    this.listenTo(this.model, "noScoreAvailable", this.renderGameLink);
+    this.listenToOnce(this.model, "noScoreAvailable", this.renderGameLink);
     this.listenTo(this.model, "decisionTreeDataFetched", this.onDecisionTreeDataFetched );
     this.listenTo(this.model, "tableDataFetched", this.onTableDataFetched);
   }
@@ -149,12 +149,17 @@ class mlGameView extends QuestionView {
   translateToNestedLists(treeNode,level) {
     const ul = document.createElement("ul");
     if (treeNode.factor) {
+      if (level == 3) {
+        this.$(".list-container").css("min-width", "1400px");
+        this.$(".list-container").css("left", "-200px");
+        this.$(".list-container").css("position", "relative");
+      }
       this.$(".list-container").css("min-height", level * 150 + "px");
       level = level + 1;
       const li = document.createElement("li");
       const factorSpan = document.createElement("span");
       factorSpan.classList.add("tree-item-factor");
-      factorSpan.textContent = `${treeNode.factor} (${treeNode.boundary})`;
+      factorSpan.textContent = `${treeNode.factor}`;
       li.appendChild(factorSpan);
       const boundaryUl = document.createElement("ul");
 
@@ -190,6 +195,7 @@ class mlGameView extends QuestionView {
   }
 
   onDecisionTreeDataFetched() {
+    this.$(".game-link-container").hide();
     const treeData = this.translateDecisionTree(this.model.get("_userTree"),"_");
     this.$(".list-container").html(this.translateToNestedLists(treeData,1));
   }
@@ -208,10 +214,11 @@ class mlGameView extends QuestionView {
   }
 
   renderGameLink() {
+    const userId = this.model.get("_userId");
     const gameLink = this.model.get("_gameLink");
     if (gameLink) {
       this.$(".game-link-container").html(
-        `<div> <span>No score found</span> <a href="${gameLink}" target="_blank">Play the Game</a><span> to receive a score</span></div>`
+        `<div> <span>No score found</span> <a href="${gameLink}?userId=${userId}" target="_blank">Play the Game</a><span> to receive a score</span></div>`
         );
       }
   }

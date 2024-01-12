@@ -12,6 +12,7 @@ class mlGameModel extends QuestionModel {
       this.set("_userId", this.get("testUserId"));
     }
     this.set("_maxScore", 600);
+    this.set("_canSubmit", false);
   }
 
   async fetchScore() {
@@ -24,7 +25,7 @@ class mlGameModel extends QuestionModel {
       const response = await fetch(url);
       const data = await response.json();
       if (data && data.score !== undefined && data.score !== null) {
-        console.log("Score", data.score);
+        this.set('_canSubmit',true);
         this.set("_userTree", data.tree);
         this.trigger("decisionTreeDataFetched", data.tree);
         this.set("_userTableData", data);
@@ -65,7 +66,6 @@ class mlGameModel extends QuestionModel {
 
   restoreUserAnswers() {
     if (!this.get("_isSubmitted")) return;
-
     const userAnswer = this.get("_userAnswer");
     const genericAnswers = this.get("_answers");
     this.get("_items").forEach((item) => {
@@ -98,7 +98,7 @@ class mlGameModel extends QuestionModel {
   }
 
   canSubmit() {
-    return true;
+    return this.get("_canSubmit");
   }
 
   canReset() {
@@ -119,7 +119,6 @@ class mlGameModel extends QuestionModel {
 
       if (Adapt.spoor && Adapt.spoor.scorm && Adapt.spoor.scorm.scorm) {
         Adapt.spoor.scorm.scorm.set("cmi.core.score.raw", score);
-        console.log("SCORM 1.2 Score Updated:", score);
       }
     } else {
       console.warn(
