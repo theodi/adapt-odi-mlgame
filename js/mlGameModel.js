@@ -38,13 +38,11 @@ class mlGameModel extends QuestionModel {
         this.markAsComplete();
         this.setupFeedback();
       } else {
-        this.showGameLink();
         setTimeout(() => this.fetchScore(), 5000);
         this.trigger("noScoreAvailable");
       }
     } catch (error) {
       console.error("Error fetching score:", error);
-      this.showGameLink();
       this.trigger("noScoreAvailable");
       setTimeout(() => this.fetchScore(), 5000);
     }
