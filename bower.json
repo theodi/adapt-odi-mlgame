@@ -1,6 +1,6 @@
 {
   "name": "adapt-odi-mlgame",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "framework": ">=5.19.1",
   "homepage": "https://github.com/theodi/adapt-odi-mlgame",
   "bugs": "https://github.com/theodi/adapt-odi-mlgame/issues",
