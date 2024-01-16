@@ -206,7 +206,7 @@ class mlGameView extends QuestionView {
     this.$(".score-container").show();
     this.model.setQuestionAsSubmitted()
     this.model.updateButtons();
-    this.$(".js-btn-marking").addClass("is-full-width2");
+    this.$(".js-btn-marking").addClass("is-full-width");
   }
 
   events() {
